@@ -5,7 +5,7 @@
 This is still a work in progress
 
 ## To Do
-* ~~Bike Sprite~~
+* ~~Bike Sprite~~ Completed
 * Fishing Sprite
 * Battle Sprites (Front and Back)
 * Voxel Mod support
