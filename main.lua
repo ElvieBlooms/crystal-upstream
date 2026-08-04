@@ -12,6 +12,9 @@ return function(mod)
     {0, 0, 0}
   }
   
+
+  -- Intercepts the sprite renderer if the sprite is assigned a matching palette source and applies the CRYSTAL_COLORS palette to the sprite. 
+  -- Hands the request back to the original sprite renderer if any other sprite.
   PaletteFX.spriteObp = function(spriteDef, seed)
     if spriteDef and spriteDef.paletteSource == "PLAYER_PALETTE" then
       return CRYSTAL_COLORS, "crystalPlayer"
