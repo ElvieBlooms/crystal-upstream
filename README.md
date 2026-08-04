@@ -5,6 +5,8 @@
 This is still a work in progress
 
 ## To Do
-* --Bike Sprite--
+* ~~Bike Sprite~~
 * Fishing Sprite
 * Battle Sprites (Front and Back)
+* Voxel Mod support
+* Change name options in Oak's dialogue to match Crystal's original options
