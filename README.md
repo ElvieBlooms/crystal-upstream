@@ -5,6 +5,6 @@
 This is still a work in progress
 
 ## To Do
-* Bike Sprite
+* --Bike Sprite--
 * Fishing Sprite
 * Battle Sprites (Front and Back)
