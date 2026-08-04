@@ -18,12 +18,12 @@ return function(mod)
   PaletteFX.spriteObp = function(spriteDef, seed)
     if spriteDef and spriteDef.paletteSource == "PLAYER_PALETTE" then
       return CRYSTAL_COLORS, "crystalPlayer"
-    end
+      end
     
     if originalSpriteObp then
       return originalSpriteObp(spriteDef, seed)
+      end
     end
-  end
   
     
   mod.content.sprites:patch("SPRITE_RED", {
@@ -31,5 +31,11 @@ return function(mod)
     trueColor = false,
     paletteSource = "PLAYER_PALETTE"
   })
+  
+  mod.content.sprites:patch("SPRITE_RED_BIKE", {
+    image = mod.assets:path("assets/crystalBike.png"),
+    trueColor = false,
+    paletteSource = "PLAYER_PALETTE"
+    })
   
 end
