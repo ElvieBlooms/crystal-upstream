@@ -7,5 +7,6 @@
 * ~~Bike Sprite~~ Completed
 * ~~Fishing Sprite~~ Completed
 * ~~Battle Sprites (Front and Back)~~ Completed
-* ~~Voxel Mod support~~ Works out of the box
+* Voxel Mod support -- Mostly working.
+  * The fishing sprite breaks with voxel. Need to fix this.
 * Change name options in Oak's dialogue to match Crystal's original options
