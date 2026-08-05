@@ -3,8 +3,8 @@ return function(mod)
 
   local PaletteFX = require("src.render.PaletteFX")
   local originalSpriteObp = PaletteFX.spriteObp
-  local palettes = require("data.palettes_gbc")
-  
+  local field = require("data.generated.field")
+
   local CRYSTAL_COLORS = {
     {255, 255, 255},
     {255, 173, 99},
@@ -48,6 +48,23 @@ return function(mod)
     path = mod.assets:path("assets/crystalBack.png"),
     scale = 1.0,
   })
+
+  CRYSTAL_FISH_SIDE = mod.assets:path("assets/crystalFishSide.png")
+  CRYSTAL_FISH_FRONT = mod.assets:path("assets/crystalFishFront.png")
+  CRYSTAL_FISH_BACK = mod.assets:path("assets/crystalFishBack.png")
   
+  if field.overworldFx.redFishSide then
+    field.overworldFx.redFishSide.path = CRYSTAL_FISH_SIDE
+  end
+
+  if field.overworldFx.redFishFront then
+    field.overworldFx.redFishFront.path = CRYSTAL_FISH_FRONT
+  end
+
+  if field.overworldFx.redFishBack then
+    field.overworldFx.redFishBack.path = CRYSTAL_FISH_BACK
+  end
+
+  return field
 
 end
