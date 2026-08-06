@@ -8,5 +8,5 @@
 * ~~Fishing Sprite~~ Completed
 * ~~Battle Sprites (Front and Back)~~ Completed
 * Voxel Mod support -- Mostly working.
-  * The fishing sprite breaks with voxel. Need to fix this.
+  * The fishing sprite breaks with voxel. It looks like this happens on the original sprite too. I will submit a bug report.
 * Change name options in Oak's dialogue to match Crystal's original options
