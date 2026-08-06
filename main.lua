@@ -5,6 +5,8 @@ return function(mod)
   local originalSpriteObp = PaletteFX.spriteObp
   local field = require("data.generated.field")
 
+  -- Recoloring the "advanced" color palette
+  -- ------------------------------------------
   local CRYSTAL_COLORS = {
     {255, 255, 255},
     {255, 173, 99},
@@ -12,8 +14,6 @@ return function(mod)
     {0, 0, 0}
   }
 
-  
-  
   -- Intercepts the sprite renderer if the sprite is assigned a matching palette source and applies the CRYSTAL_COLORS palette to the sprite. 
   -- Hands the request back to the original sprite renderer if any other sprite.
   PaletteFX.spriteObp = function(spriteDef, seed)
@@ -27,6 +27,8 @@ return function(mod)
   end
   
     
+  -- Sprite replacements
+  -- --------------------------
   mod.content.sprites:patch("SPRITE_RED", {
     image = mod.assets:path("assets/crystalPlayer.png"),
     trueColor = false,
@@ -64,6 +66,15 @@ return function(mod)
   if field.overworldFx.redFishBack then
     field.overworldFx.redFishBack.path = CRYSTAL_FISH_BACK
   end
+  
+  -- New game naming options
+  -- ---------------------------
+  mod.content.field:override("boot", {
+    namePresets = {
+      player = {"KRIS", "AMANDA", "JUANA", "JODI" }
+    }
+  })
+
 
   return field
 
