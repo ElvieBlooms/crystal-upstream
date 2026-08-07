@@ -5,6 +5,13 @@ return function(mod)
   local originalSpriteObp = PaletteFX.spriteObp
   local field = require("data.generated.field")
 
+  -- Define mod options
+  -- ----------------------------------
+  mod.options:define({
+    {key = "battleSprite", type = "choice", label = "BATTLE SPRITE",
+      choices = {{"ORIGINAL", "original"}, {"STADIUM - ARALE", "stadium"}}, default = "original"}
+  })
+
   -- Recoloring the "advanced" color palette
   -- ------------------------------------------
   local CRYSTAL_COLORS = {
@@ -40,16 +47,38 @@ return function(mod)
     trueColor = false,
     paletteSource = "PLAYER_PALETTE"
   })
-
+  
   mod.content.field:patch("playerPics", {
-    front = mod.assets:path("assets/crystalFront.png"),
+    front = mod.assets:path("assets/crystalFront.png")
+  })
+  
+  mod.content.field:patch("playerPics", {
     back = mod.assets:path("assets/crystalBack.png")
   })
-
   mod.content.battle_sprite_scales:register("hero_back", {
     path = mod.assets:path("assets/crystalBack.png"),
     scale = 1.0,
   })
+  mod.content.battle_sprite_scales:register("hero_back_stadium", {
+    path = mod.assets:path("assets/araleCrystalBack.png"),
+    scale = 1.0,
+  })
+
+  -- Change sprite based on player's choice
+  -- --------------------------------------
+  mod.hooks:wrap("player.sprite", function(next, path, ctx)
+    path = next(path, ctx)         
+    if ctx.demo then return path end 
+    if ctx.side ~= "back" then return path end
+
+    local choice = mod.options:get("battleSprite")
+    if choice == "stadium" then
+      return mod.assets:path("assets/araleCrystalBack.png")
+    end
+    return path
+  end)
+
+
 
   CRYSTAL_FISH_SIDE = mod.assets:path("assets/crystalFishSide.png")
   CRYSTAL_FISH_FRONT = mod.assets:path("assets/crystalFishFront.png")
