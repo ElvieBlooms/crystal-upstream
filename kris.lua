@@ -106,8 +106,10 @@ function kris.init(mod)
     }
   })
 
-
-  return field
+  -- Title screen player
+  -- ----------------------
+  local titlePlayer = mod.assets:path("assets/crystalTitlePlayer.png")
+  mod.content.field:patch("title", {player = titlePlayer })
 
 end
 
