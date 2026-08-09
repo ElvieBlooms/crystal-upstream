@@ -5,7 +5,7 @@ function kris.init(mod)
 
   local PaletteFX = require("src.render.PaletteFX")
   local originalSpriteObp = PaletteFX.spriteObp
-  local field = require("data.generated.field")
+  
 
   -- Define mod options
   -- ----------------------------------
@@ -85,18 +85,12 @@ function kris.init(mod)
   CRYSTAL_FISH_SIDE = mod.assets:path("assets/crystalFishSide.png")
   CRYSTAL_FISH_FRONT = mod.assets:path("assets/crystalFishFront.png")
   CRYSTAL_FISH_BACK = mod.assets:path("assets/crystalFishBack.png")
-  
-  if field.overworldFx.redFishSide then
-    field.overworldFx.redFishSide.path = CRYSTAL_FISH_SIDE
-  end
 
-  if field.overworldFx.redFishFront then
-    field.overworldFx.redFishFront.path = CRYSTAL_FISH_FRONT
-  end
-
-  if field.overworldFx.redFishBack then
-    field.overworldFx.redFishBack.path = CRYSTAL_FISH_BACK
-  end
+  mod.content.field:patch("overworldFx", {
+  redFishSide  = { path = CRYSTAL_FISH_SIDE },
+  redFishFront = { path = CRYSTAL_FISH_FRONT },
+  redFishBack  = { path = CRYSTAL_FISH_BACK },
+})
   
   -- New game naming options
   -- ---------------------------
@@ -109,7 +103,10 @@ function kris.init(mod)
   -- Title screen player
   -- ----------------------
   local titlePlayer = mod.assets:path("assets/crystalTitlePlayer.png")
-  mod.content.field:patch("title", {player = titlePlayer })
+  mod.content.field:patch("boot", {
+    title = {player = titlePlayer},
+  })
+
 
 end
 
