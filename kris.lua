@@ -11,9 +11,44 @@ function kris.init(mod)
   -- Define mod options
   -- ----------------------------------
   mod.options:define({
-    {key = "battleSprite", type = "choice", label = "BATTLE SPRITE",
-      choices = {{"ORIGINAL", "original"}, {"Full MONOCHROME - ARALE", "stadium"}, {"FULL COLOR - ARALE", "stadiumColor"} }, default = "original"}
+    {
+      key = "battleSprite", type = "choice", label = "BATTLE SPRITE",
+        choices = {{"ORIGINAL", "original"}, {"STADIUM", "stadium"}}, default = "original"
+    },
+    {
+     key = "colorMode", type = "choice", label = "COLOR PALETTE",
+     choices = {{"SGB COMPATIBLE", "sgb"}, {"FULL COLOR", "fullColor"}}, default = "sgb"
+    }
   })
+
+  local spriteVariants = {
+    stadium = {
+      sgb = { path = "assets/araleCrystalBack.png", trueColor = false },
+      fullColor = { path = "assets/araleCrystalBackColor.png", trueColor = true },
+    },
+    original = {
+      sgb = nil,
+      fullColor = nil,
+    },
+  }
+
+  mod.hooks:wrap("player.sprite", function(next, path, ctx)
+    path = next(path,ctx)
+    if ctx.demo then return path end
+    if ctx.side ~= "back" then return path end
+
+    local battleSprite = mod.options:get("battleSprite")
+    local colorMode = mod.options:get("colorMode")
+    local variant = spriteVariants[battleSprite] and spriteVariants[battleSprite][colorMode]
+
+    if variant then
+      ctx.trueColor = variant.trueColor
+      return mod.assets:path(variant.path)
+    end
+
+    return path
+  end)
+
 
   -- Recoloring the "advanced" color palette
   -- ------------------------------------------
@@ -71,23 +106,7 @@ function kris.init(mod)
     scale = 1.0,
   })
 
-  -- Change sprite based on player's choice
-  -- --------------------------------------
-  mod.hooks:wrap("player.sprite", function(next, path, ctx)
-    path = next(path, ctx)         
-    if ctx.demo then return path end 
-    if ctx.side ~= "back" then return path end
 
-    local choice = mod.options:get("battleSprite")
-    if choice == "stadium" then
-      ctx.trueColor = false
-      return mod.assets:path("assets/araleCrystalBack.png")
-    elseif choice == "stadiumColor" then
-      ctx.trueColor = true
-      return mod.assets:path("assets/araleCrystalBackColor.png")
-    end
-    return path
-  end)
 
 
 
