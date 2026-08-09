@@ -5,14 +5,50 @@ function kris.init(mod)
 
   local PaletteFX = require("src.render.PaletteFX")
   local originalSpriteObp = PaletteFX.spriteObp
+  local advancedPack = assert(PaletteFX.gbcPack())
   
 
   -- Define mod options
   -- ----------------------------------
   mod.options:define({
-    {key = "battleSprite", type = "choice", label = "BATTLE SPRITE",
-      choices = {{"ORIGINAL", "original"}, {"STADIUM - ARALE", "stadium"}}, default = "original"}
+    {
+      key = "battleSprite", type = "choice", label = "BATTLE SPRITE",
+        choices = {{"ORIGINAL", "original"}, {"STADIUM", "stadium"}}, default = "original"
+    },
+    {
+     key = "colorMode", type = "choice", label = "COLOR PALETTE",
+     choices = {{"SGB COMPATIBLE", "sgb"}, {"FULL COLOR", "fullColor"}}, default = "sgb"
+    }
   })
+
+  local spriteVariants = {
+    stadium = {
+      sgb = { path = "assets/araleCrystalBack.png", trueColor = false },
+      fullColor = { path = "assets/araleCrystalBackColor.png", trueColor = true },
+    },
+    original = {
+      sgb = nil,
+      fullColor = nil,
+    },
+  }
+
+  mod.hooks:wrap("player.sprite", function(next, path, ctx)
+    path = next(path,ctx)
+    if ctx.demo then return path end
+    if ctx.side ~= "back" then return path end
+
+    local battleSprite = mod.options:get("battleSprite")
+    local colorMode = mod.options:get("colorMode")
+    local variant = spriteVariants[battleSprite] and spriteVariants[battleSprite][colorMode]
+
+    if variant then
+      ctx.trueColor = variant.trueColor
+      return mod.assets:path(variant.path)
+    end
+
+    return path
+  end)
+
 
   -- Recoloring the "advanced" color palette
   -- ------------------------------------------
@@ -22,7 +58,7 @@ function kris.init(mod)
     {1, 99, 198},
     {0, 0, 0}
   }
-
+  
   -- Intercepts the sprite renderer if the sprite is assigned a matching palette source and applies the CRYSTAL_COLORS palette to the sprite. 
   -- Hands the request back to the original sprite renderer if any other sprite.
   PaletteFX.spriteObp = function(spriteDef, seed)
@@ -55,7 +91,7 @@ function kris.init(mod)
   })
   
   mod.content.field:patch("playerPics", {
-    back = mod.assets:path("assets/crystalBack.png")
+    back = mod.assets:path("assets/crystalBack.png"),
   })
   mod.content.battle_sprite_scales:register("hero_back", {
     path = mod.assets:path("assets/crystalBack.png"),
@@ -65,20 +101,12 @@ function kris.init(mod)
     path = mod.assets:path("assets/araleCrystalBack.png"),
     scale = 1.0,
   })
+  mod.content.battle_sprite_scales:register("hero_back_stadium_color", {
+    path = mod.assets:path("assets/araleCrystalBackColor.png"),
+    scale = 1.0,
+  })
 
-  -- Change sprite based on player's choice
-  -- --------------------------------------
-  mod.hooks:wrap("player.sprite", function(next, path, ctx)
-    path = next(path, ctx)         
-    if ctx.demo then return path end 
-    if ctx.side ~= "back" then return path end
 
-    local choice = mod.options:get("battleSprite")
-    if choice == "stadium" then
-      return mod.assets:path("assets/araleCrystalBack.png")
-    end
-    return path
-  end)
 
 
 
