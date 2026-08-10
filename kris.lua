@@ -16,7 +16,8 @@ function kris.init(mod)
         choices = {
       	  {"ORIGINAL", "original"},
 	  {"STADIUM", "stadium"},
-	  {"SYGNA", "sygna"}
+	  {"SYGNA", "sygna"},
+	  {"SYGNA ZOOM", "sygnaZoom"},
 	}, default = "original"
     },
     {
@@ -39,6 +40,10 @@ function kris.init(mod)
     sygna = {
       sgb = {path = "assets/sygnaBack.png", trueColor = false},
       fullColor = {path = "assets/sygnaBackColor.png", trueColor = true},
+    },
+    sygnaZoom = {
+      sgb = {path = "assets/sygnaZoom.png", trueColor = false},
+      fullColor = {path = "assets/sygnaZoomColor.png", trueColor = true},
     },
   }
 
