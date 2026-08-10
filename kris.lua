@@ -13,12 +13,18 @@ function kris.init(mod)
   mod.options:define({
     {
       key = "battleSprite", type = "choice", label = "BATTLE SPRITE",
-        choices = {{"ORIGINAL", "original"}, {"STADIUM", "stadium"}}, default = "original"
+        choices = {
+      	  {"ORIGINAL", "original"},
+	  {"STADIUM", "stadium"},
+	  {"SYGNA", "sygna"}
+	}, default = "original"
     },
     {
      key = "colorMode", type = "choice", label = "COLOR PALETTE",
-     choices = {{"SGB COMPATIBLE", "sgb"}, {"FULL COLOR", "fullColor"}}, default = "sgb"
-    }
+       choices = {
+         {"SGB COMPATIBLE", "sgb"},
+	 {"FULL COLOR", "fullColor"}},
+	 default = "sgb"}
   })
 
   local spriteVariants = {
@@ -29,6 +35,10 @@ function kris.init(mod)
     original = {
       sgb = {path = "assets/originalBack.png", trueColor = false},
       fullColor = {path = "assets/originalBackColor.png", trueColor = true},
+    },
+    sygna = {
+      sgb = {path = "assets/sygnaBack.png", trueColor = false},
+      fullColor = {path = "assets/sygnaBackColor.png", trueColor = true},
     },
   }
 
