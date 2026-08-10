@@ -23,15 +23,17 @@ function kris.init(mod)
 
   local spriteVariants = {
     stadium = {
-      sgb = { path = "assets/araleCrystalBack.png", trueColor = false },
-      fullColor = { path = "assets/araleCrystalBackColor.png", trueColor = true },
+      sgb = { path = "assets/stadiumBack.png", trueColor = false},
+      fullColor = { path = "assets/stadiumBackColor.png", trueColor = true,},
     },
     original = {
-      sgb = nil,
-      fullColor = nil,
+      sgb = {path = "assets/originalBack.png", trueColor = false},
+      fullColor = {path = "assets/originalBackColor.png", trueColor = true},
     },
   }
 
+  -- Assign player sprite based on mod options
+  -- -----------------------------------------
   mod.hooks:wrap("player.sprite", function(next, path, ctx)
     path = next(path,ctx)
     if ctx.demo then return path end
@@ -40,15 +42,27 @@ function kris.init(mod)
     local battleSprite = mod.options:get("battleSprite")
     local colorMode = mod.options:get("colorMode")
     local variant = spriteVariants[battleSprite] and spriteVariants[battleSprite][colorMode]
-
+    
     if variant then
       ctx.trueColor = variant.trueColor
       return mod.assets:path(variant.path)
-    end
 
+    end
     return path
   end)
 
+  -- Scale sprite
+  -- ---------------------------------------------------
+  for label, colorModes in pairs(spriteVariants) do
+    for colorMode, asset in pairs(colorModes) do
+      local labelId = label .. "_" .. colorMode
+      mod.content.battle_sprite_scales:register(labelId, {
+        path = mod.assets:path(asset.path),
+	scale = 1.0,
+      })
+    end
+  end
+  
 
   -- Recoloring the "advanced" color palette
   -- ------------------------------------------
@@ -90,29 +104,9 @@ function kris.init(mod)
     front = mod.assets:path("assets/crystalFront.png")
   })
   
-  mod.content.field:patch("playerPics", {
-    back = mod.assets:path("assets/crystalBack.png"),
-  })
-  mod.content.battle_sprite_scales:register("hero_back", {
-    path = mod.assets:path("assets/crystalBack.png"),
-    scale = 1.0,
-  })
-  mod.content.battle_sprite_scales:register("hero_back_stadium", {
-    path = mod.assets:path("assets/araleCrystalBack.png"),
-    scale = 1.0,
-  })
-  mod.content.battle_sprite_scales:register("hero_back_stadium_color", {
-    path = mod.assets:path("assets/araleCrystalBackColor.png"),
-    scale = 1.0,
-  })
-
-
-
-
-
-  CRYSTAL_FISH_SIDE = mod.assets:path("assets/crystalFishSide.png")
-  CRYSTAL_FISH_FRONT = mod.assets:path("assets/crystalFishFront.png")
-  CRYSTAL_FISH_BACK = mod.assets:path("assets/crystalFishBack.png")
+  local CRYSTAL_FISH_SIDE = mod.assets:path("assets/crystalFishSide.png")
+  local CRYSTAL_FISH_FRONT = mod.assets:path("assets/crystalFishFront.png")
+  local CRYSTAL_FISH_BACK = mod.assets:path("assets/crystalFishBack.png")
 
   mod.content.field:patch("overworldFx", {
   redFishSide  = { path = CRYSTAL_FISH_SIDE },
