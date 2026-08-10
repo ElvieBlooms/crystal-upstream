@@ -10,3 +10,4 @@
 * Voxel Mod support -- Mostly working.
   * The fishing sprite breaks with voxel. It looks like this happens on the original sprite too. I will submit a bug report.
 * Changed name options in Oak's dialogue to match Crystal's original options
+* All sprites have an SGB compatibility mode as well as a full color mode
