@@ -102,6 +102,7 @@ function kris.init(mod)
   
     
   -- Sprite replacements
+  -- RED
   -- --------------------------
   mod.content.sprites:patch("SPRITE_RED", {
     image = mod.assets:path("assets/crystalPlayer.png"),
@@ -128,6 +129,19 @@ function kris.init(mod)
   redFishFront = { path = CRYSTAL_FISH_FRONT },
   redFishBack  = { path = CRYSTAL_FISH_BACK },
 })
+
+  -- Sprite replacements
+  -- GOLD
+  -- -------------------------
+  mod.content.sprites:patch("SPRITE_CHRIS", {
+    image = mod.assets:path("assets/crystalPlayerColor.png"),
+    trueColor = true,
+  }) 
+
+  mod.content.sprites:patch("SPRITE_CHRIS_BIKE", {
+    image = mod.assets:path("assets/crystalBikeColor.png"),
+    trueColor = true,
+  })
   
   -- New game naming options
   -- ---------------------------
