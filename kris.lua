@@ -23,26 +23,26 @@ function kris.init(mod)
     {
      key = "colorMode", type = "choice", label = "COLOR PALETTE",
        choices = {
-         {"SGB COMPATIBLE", "sgb"},
+         {"DMG COMPATIBLE", "dmg"},
 	 {"FULL COLOR", "fullColor"}},
-	 default = "sgb"}
+	 default = "dmg"}
   })
 
   local spriteVariants = {
     stadium = {
-      sgb = { path = "assets/stadiumBack.png", trueColor = false},
+      dmg = { path = "assets/stadiumBack.png", trueColor = false},
       fullColor = { path = "assets/stadiumBackColor.png", trueColor = true,},
     },
     original = {
-      sgb = {path = "assets/originalBack.png", trueColor = false},
+      dmg = {path = "assets/originalBack.png", trueColor = false},
       fullColor = {path = "assets/originalBackColor.png", trueColor = true},
     },
     sygna = {
-      sgb = {path = "assets/sygnaBack.png", trueColor = false},
+      dmg = {path = "assets/sygnaBack.png", trueColor = false},
       fullColor = {path = "assets/sygnaBackColor.png", trueColor = true},
     },
     sygnaZoom = {
-      sgb = {path = "assets/sygnaZoom.png", trueColor = false},
+      dmg = {path = "assets/sygnaZoom.png", trueColor = false},
       fullColor = {path = "assets/sygnaZoomColor.png", trueColor = true},
     },
   }
