@@ -26,6 +26,14 @@ function kris.init(mod)
 	}, default = "original"
     },
     {
+      key = "frontSprite", type = "choice", label = "TRAINER CARD",
+        choices = {
+          {"ORIGINAL", "original"},
+	  {"ROCKET A", "rocketA"},
+	  {"ROCKET B", "rocketB"},
+	}, default = "original"
+    },
+    {
      key = "colorMode", type = "choice", label = "COLOR PALETTE",
        choices = {
          {"DMG COMPATIBLE", "dmg"},
@@ -72,17 +80,42 @@ function kris.init(mod)
     },
   }
 
+  local frontSpriteVariants = {
+    original = {
+      dmg = {path = "assets/front/originalFront.png", trueColor = false},
+      fullColor = {path = "assets/front/originalFrontColor.png", trueColor = true},
+    },
+    rocketA = {
+      dmg = {path = "assets/front/rocketFrontA.png", trueColor = false},
+      fullColor = {path = "assets/front/rocketFrontColorA.png", trueColor = true},
+    },
+    rocketB = {
+      dmg = {path = "assets/front/rocketFrontB.png", trueColor = false},
+      fullColor = {path = "assets/front/rocketFrontColorB.png", trueColor = true},
+    },
+  }
+
   -- Assign player sprite based on mod options
   -- -----------------------------------------
   mod.hooks:wrap("player.sprite", function(next, path, ctx)
     path = next(path,ctx)
     if ctx.demo then return path end
-    if ctx.side ~= "back" then return path end
 
-    local battleSprite = mod.options:get("battleSprite")
     local colorMode = mod.options:get("colorMode")
-    local variant = battleSpriteVariants[battleSprite] and battleSpriteVariants[battleSprite][colorMode]
-    
+    local variants, selected
+
+    if ctx.side == "back" then
+      variants = battleSpriteVariants
+      selected = mod.options:get("battleSprite")
+    elseif ctx.side == "front" then
+      variants = frontSpriteVariants
+      selected = mod.options:get("frontSprite")
+    else
+      return path
+    end
+
+    local variant = variants[selected] and variants[selected][colorMode]
+
     if variant then
       ctx.trueColor = variant.trueColor
       return mod.assets:path(variant.path)
@@ -178,7 +211,10 @@ function kris.init(mod)
 
   -- Title screen player
   -- ----------------------
-  local titlePlayer = mod.assets:path("assets/front/originalFront.png")
+  local titleVariant = frontSpriteVariants[mod.options:get("frontSprite")]
+    and frontSpriteVariants[mod.options:get("frontSprite")]["dmg"]
+  local titlePlayer = titleVariant and mod.assets:path(titleVariant.path)
+    or mod.assets:path("assets/front/originalFront.png")
   mod.content.field:patch("boot", {
     title = {player = titlePlayer},
   })
