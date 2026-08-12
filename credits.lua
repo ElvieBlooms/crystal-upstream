@@ -4,7 +4,7 @@ function credits.init(mod)
 
   mod.hooks:wrap("ui.start_menu.items", function(next, game, items)
     mod.ui.insertBefore(items, "QUIT", {
-      label = "TEAM KRIS",
+      label = "T. KRIS",
       onSelect = function() mod.ui.push(game, "credits") end,
     })
     return next(game, items)

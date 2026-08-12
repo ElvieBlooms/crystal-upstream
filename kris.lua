@@ -15,7 +15,8 @@ function kris.init(mod)
       key = "battleSprite", type = "choice", label = "BATTLE SPRITE",
         choices = {
       	  {"ORIGINAL", "original"},
-	  {"STADIUM", "stadium"},
+	  {"DARIO", "dario"},
+	  {"ARALE", "arale"},
 	  {"SYGNA", "sygna"},
 	  {"SYGNA ZOOM", "sygnaZoom"},
 	}, default = "original"
@@ -23,26 +24,30 @@ function kris.init(mod)
     {
      key = "colorMode", type = "choice", label = "COLOR PALETTE",
        choices = {
-         {"SGB COMPATIBLE", "sgb"},
+         {"DMG COMPATIBLE", "dmg"},
 	 {"FULL COLOR", "fullColor"}},
-	 default = "sgb"}
+	 default = "dmg"}
   })
 
   local spriteVariants = {
-    stadium = {
-      sgb = { path = "assets/stadiumBack.png", trueColor = false},
-      fullColor = { path = "assets/stadiumBackColor.png", trueColor = true,},
+    dario = {
+      dmg = { path = "assets/stadiumBack.png", trueColor = false},
+      fullColor = { path = "assets/stadiumBackColor.png", trueColor = true},
+    },
+    arale = {
+      dmg = {path = "assets/stadiumBack.png", trueColor =false},
+      fullColor = {path = "assets/stadiumBackAlt.png", trueColor = true},
     },
     original = {
-      sgb = {path = "assets/originalBack.png", trueColor = false},
+      dmg = {path = "assets/originalBack.png", trueColor = false},
       fullColor = {path = "assets/originalBackColor.png", trueColor = true},
     },
     sygna = {
-      sgb = {path = "assets/sygnaBack.png", trueColor = false},
+      dmg = {path = "assets/sygnaBack.png", trueColor = false},
       fullColor = {path = "assets/sygnaBackColor.png", trueColor = true},
     },
     sygnaZoom = {
-      sgb = {path = "assets/sygnaZoom.png", trueColor = false},
+      dmg = {path = "assets/sygnaZoom.png", trueColor = false},
       fullColor = {path = "assets/sygnaZoomColor.png", trueColor = true},
     },
   }
@@ -102,6 +107,7 @@ function kris.init(mod)
   
     
   -- Sprite replacements
+  -- RED
   -- --------------------------
   mod.content.sprites:patch("SPRITE_RED", {
     image = mod.assets:path("assets/crystalPlayer.png"),
@@ -128,6 +134,19 @@ function kris.init(mod)
   redFishFront = { path = CRYSTAL_FISH_FRONT },
   redFishBack  = { path = CRYSTAL_FISH_BACK },
 })
+
+  -- Sprite replacements
+  -- GOLD
+  -- -------------------------
+  mod.content.sprites:patch("SPRITE_CHRIS", {
+    image = mod.assets:path("assets/crystalPlayerColor.png"),
+    trueColor = true,
+  }) 
+
+  mod.content.sprites:patch("SPRITE_CHRIS_BIKE", {
+    image = mod.assets:path("assets/crystalBikeColor.png"),
+    trueColor = true,
+  })
   
   -- New game naming options
   -- ---------------------------
