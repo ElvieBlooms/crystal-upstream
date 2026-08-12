@@ -15,7 +15,8 @@ function kris.init(mod)
       key = "battleSprite", type = "choice", label = "BATTLE SPRITE",
         choices = {
       	  {"ORIGINAL", "original"},
-	  {"STADIUM", "stadium"},
+	  {"DARIO", "dario"},
+	  {"ARALE", "arale"},
 	  {"SYGNA", "sygna"},
 	  {"SYGNA ZOOM", "sygnaZoom"},
 	}, default = "original"
@@ -29,9 +30,13 @@ function kris.init(mod)
   })
 
   local spriteVariants = {
-    stadium = {
+    dario = {
       dmg = { path = "assets/stadiumBack.png", trueColor = false},
-      fullColor = { path = "assets/stadiumBackColor.png", trueColor = true,},
+      fullColor = { path = "assets/stadiumBackColor.png", trueColor = true},
+    },
+    arale = {
+      dmg = {path = "assets/stadiumBack.png", trueColor =false},
+      fullColor = {path = "assets/stadiumBackAlt.png", trueColor = true},
     },
     original = {
       dmg = {path = "assets/originalBack.png", trueColor = false},
