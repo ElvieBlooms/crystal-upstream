@@ -19,6 +19,10 @@ function kris.init(mod)
 	  {"ARALE", "arale"},
 	  {"SYGNA", "sygna"},
 	  {"SYGNA ZOOM", "sygnaZoom"},
+	  {"ROCKET A", "rocketA"},
+	  {"ROCKET A ZOOM", "rocketAZoom"},
+	  {"ROCKET B", "rocketB"},
+	  {"ROCKET B ZOOM", "rocketBZoom"},
 	}, default = "original"
     },
     {
@@ -29,26 +33,42 @@ function kris.init(mod)
 	 default = "dmg"}
   })
 
-  local spriteVariants = {
+  local battleSpriteVariants = {
     dario = {
-      dmg = { path = "assets/stadiumBack.png", trueColor = false},
-      fullColor = { path = "assets/stadiumBackColor.png", trueColor = true},
+      dmg = { path = "assets/back/stadiumBack.png", trueColor = false},
+      fullColor = { path = "assets/back/stadiumBackColor.png", trueColor = true},
     },
     arale = {
-      dmg = {path = "assets/stadiumBack.png", trueColor =false},
-      fullColor = {path = "assets/stadiumBackAlt.png", trueColor = true},
+      dmg = {path = "assets/back/stadiumBack.png", trueColor =false},
+      fullColor = {path = "assets/back/stadiumBackAlt.png", trueColor = true},
     },
     original = {
-      dmg = {path = "assets/originalBack.png", trueColor = false},
-      fullColor = {path = "assets/originalBackColor.png", trueColor = true},
+      dmg = {path = "assets/back/originalBack.png", trueColor = false},
+      fullColor = {path = "assets/back/originalBackColor.png", trueColor = true},
     },
     sygna = {
-      dmg = {path = "assets/sygnaBack.png", trueColor = false},
-      fullColor = {path = "assets/sygnaBackColor.png", trueColor = true},
+      dmg = {path = "assets/back/sygnaBack.png", trueColor = false},
+      fullColor = {path = "assets/back/sygnaBackColor.png", trueColor = true},
     },
     sygnaZoom = {
-      dmg = {path = "assets/sygnaZoom.png", trueColor = false},
-      fullColor = {path = "assets/sygnaZoomColor.png", trueColor = true},
+      dmg = {path = "assets/back/sygnaZoom.png", trueColor = false},
+      fullColor = {path = "assets/back/sygnaZoomColor.png", trueColor = true},
+    },
+    rocketA = {
+      dmg = {path = "assets/back/rocketBackA.png", trueColor = false},
+      fullColor = {path = "assets/back/rocketBackColorA.png", trueColor = true},
+    },
+    rocketAZoom = {
+      dmg = {path = "assets/back/rocketZoomA.png", trueColor = false},
+      fullColor = {path = "assets/back/rocketZoomColorA.png", trueColor = true},
+    },
+    rocketB = {
+      dmg = {path = "assets/back/rocketBackB.png", trueColor = false},
+      fullColor = {path = "assets/back/rocketBackColorB.png", trueColor = true},
+    },
+    rocketBZoom = {
+      dmg = {path = "assets/back/rocketZoomB.png", trueColor = false},
+      fullColor = {path = "assets/back/rocketZoomColorB.png", trueColor = true},
     },
   }
 
@@ -61,7 +81,7 @@ function kris.init(mod)
 
     local battleSprite = mod.options:get("battleSprite")
     local colorMode = mod.options:get("colorMode")
-    local variant = spriteVariants[battleSprite] and spriteVariants[battleSprite][colorMode]
+    local variant = battleSpriteVariants[battleSprite] and battleSpriteVariants[battleSprite][colorMode]
     
     if variant then
       ctx.trueColor = variant.trueColor
@@ -73,7 +93,7 @@ function kris.init(mod)
 
   -- Scale sprite
   -- ---------------------------------------------------
-  for label, colorModes in pairs(spriteVariants) do
+  for label, colorModes in pairs(battleSpriteVariants) do
     for colorMode, asset in pairs(colorModes) do
       local labelId = label .. "_" .. colorMode
       mod.content.battle_sprite_scales:register(labelId, {
@@ -110,24 +130,24 @@ function kris.init(mod)
   -- RED
   -- --------------------------
   mod.content.sprites:patch("SPRITE_RED", {
-    image = mod.assets:path("assets/crystalPlayer.png"),
+    image = mod.assets:path("assets/overworld/crystalPlayer.png"),
     trueColor = false,
     paletteSource = "PLAYER_PALETTE"
   })
   
   mod.content.sprites:patch("SPRITE_RED_BIKE", {
-    image = mod.assets:path("assets/crystalBike.png"),
+    image = mod.assets:path("assets/overworld/crystalBike.png"),
     trueColor = false,
     paletteSource = "PLAYER_PALETTE"
   })
   
   mod.content.field:patch("playerPics", {
-    front = mod.assets:path("assets/crystalFront.png")
+    front = mod.assets:path("assets/front/originalFront.png")
   })
   
-  local CRYSTAL_FISH_SIDE = mod.assets:path("assets/crystalFishSide.png")
-  local CRYSTAL_FISH_FRONT = mod.assets:path("assets/crystalFishFront.png")
-  local CRYSTAL_FISH_BACK = mod.assets:path("assets/crystalFishBack.png")
+  local CRYSTAL_FISH_SIDE = mod.assets:path("assets/overworld/crystalFishSide.png")
+  local CRYSTAL_FISH_FRONT = mod.assets:path("assets/overworld/crystalFishFront.png")
+  local CRYSTAL_FISH_BACK = mod.assets:path("assets/overworld/crystalFishBack.png")
 
   mod.content.field:patch("overworldFx", {
   redFishSide  = { path = CRYSTAL_FISH_SIDE },
@@ -139,12 +159,12 @@ function kris.init(mod)
   -- GOLD
   -- -------------------------
   mod.content.sprites:patch("SPRITE_CHRIS", {
-    image = mod.assets:path("assets/crystalPlayerColor.png"),
+    image = mod.assets:path("assets/overworld/crystalPlayerColor.png"),
     trueColor = true,
   }) 
 
   mod.content.sprites:patch("SPRITE_CHRIS_BIKE", {
-    image = mod.assets:path("assets/crystalBikeColor.png"),
+    image = mod.assets:path("assets/overworld/crystalBikeColor.png"),
     trueColor = true,
   })
   
@@ -158,7 +178,7 @@ function kris.init(mod)
 
   -- Title screen player
   -- ----------------------
-  local titlePlayer = mod.assets:path("assets/crystalTitlePlayer.png")
+  local titlePlayer = mod.assets:path("assets/front/originalFront.png")
   mod.content.field:patch("boot", {
     title = {player = titlePlayer},
   })
