@@ -23,6 +23,7 @@ function kris.init(mod)
 	  {"ROCKET A ZOOM", "rocketAZoom"},
 	  {"ROCKET B", "rocketB"},
 	  {"ROCKET B ZOOM", "rocketBZoom"},
+	  {"HG/SS", "hgss"},
 	}, default = "original"
     },
     {
@@ -77,6 +78,10 @@ function kris.init(mod)
     rocketBZoom = {
       dmg = {path = "assets/back/rocketZoomB.png", trueColor = false},
       fullColor = {path = "assets/back/rocketZoomColorB.png", trueColor = true},
+    },
+    hgss = {
+      dmg = {path = "assets/back/hgssBack.png", trueColor = false},
+      fullColor = {path = "assets/back/hgssBackColor.png", trueColor = true},
     },
   }
 
