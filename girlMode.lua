@@ -25,7 +25,7 @@ function girlMode.init(mod)
     ["61:4cb3"] = "May I see your\nrail PASS, please?\012OK. Right this\nway, please.",    
     ["56:5a70"] = "Excuse me, kid!\nCan you do a guy\011a favor?\012Can you take this\nPOKéMON with MAIL\011to my friend?\012He's on ROUTE 31.",    
     ["56:5adb"] = "You will? Perfect!\nThanks, kid!\012My pal's a chubby\nguy who snoozes\011all the time.\012You'll recognize\nhim right away!",    
-    ["4a:5cd9"] = "Let's see…\012…DARK CAVE leads\nto another road…\012That's good to\nknow.\012Thanks for bring-\ning this to me.\012My friend's a good\nguy, and you're a\011swell too!\012I'd like to do\nsomething good in\011return too!\012I know! I want you\nto have this!",    
+    ["4a:5cd9"] = "Let's see…\012…DARK CAVE leads\nto another road…\012That's good to\nknow.\012Thanks for bring-\ning this to me.\012My friend's a good\nguy, and you're \011swell too!\012I'd like to do\nsomething good in\011return too!\012I know! I want you\nto have this!",    
     ["56:5c1e"] = "Thanks, kid! You\nmade the delivery\011for me!\012Here's something\nfor your trouble!",    
     ["57:4d49"] = "BILL: I knew it!\nWay to go, hero!\012You're the real\ndeal!\012OK, I'm counting\non you. Take good\011care of it.",   
     ["52:4c1b"] = "Lassie! If you can\ndefeat all the\012KIMONO GIRLS, I'll\ngive you a gift.", 
