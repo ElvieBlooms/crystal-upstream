@@ -10,11 +10,11 @@ function kris.init(mod)
 
   -- Define mod options
   -- ----------------------------------
-  mod.options:define({
+  mod.options:define({	  
     {
       key = "battleSprite", type = "choice", label = "BATTLE SPRITE",
         choices = {
-      	  {"ORIGINAL", "original"},
+          {"ORIGINAL", "original"},
 	  {"DARIO", "dario"},
 	  {"ARALE", "arale"},
 	  {"SYGNA", "sygna"},
@@ -24,22 +24,22 @@ function kris.init(mod)
 	  {"ROCKET B", "rocketB"},
 	  {"ROCKET B ZOOM", "rocketBZoom"},
 	  {"HG/SS", "hgss"},
-	}, default = "original"
+      }, default = "original"
     },
     {
-      key = "frontSprite", type = "choice", label = "TRAINER CARD",
+      key = "frontSprite", type = "choice", label = "[G-1]TRAINER CARD",
         choices = {
           {"ORIGINAL", "original"},
-	  {"ROCKET A", "rocketA"},
-	  {"ROCKET B", "rocketB"},
-	}, default = "original"
+          {"ROCKET A", "rocketA"},
+          {"ROCKET B", "rocketB"},
+        }, default = "original"
     },
     {
-     key = "colorMode", type = "choice", label = "COLOR PALETTE",
+      key = "colorMode", type = "choice", label = "COLOR PALETTE",
        choices = {
          {"DMG COMPATIBLE", "dmg"},
-	 {"FULL COLOR", "fullColor"}},
-	 default = "dmg"}
+         {"FULL COLOR", "fullColor"}},
+         default = "dmg"}
   })
 
   local battleSpriteVariants = {
@@ -181,6 +181,32 @@ function kris.init(mod)
   
   mod.content.field:patch("playerPics", {
     front = mod.assets:path("assets/front/originalFront.png")
+  })
+
+  -- Gen 2 Trainer Card
+  -- This can probably be simplified later when the field registry is available
+  -- for gen 2.
+  -- -----------------------------------------------
+  mod.content.screens:register("Gen2TrainerCard", {
+    new = function(game, opts)
+      local TrainerCard = require("src.ui.gen2.TrainerCard")
+      local base = (game.data.gen2MenuGfx or {}).trainerCard or {}
+
+      local gfx = {}
+      for k, v in pairs(base) do gfx[k] = v end
+      gfx.card = mod.assets:path("assets/menus/card.png")
+
+      local newOpts = {}
+      for k, v in pairs(opts or {}) do newOpts[k] = v end
+      newOpts.menuGfx = { trainerCard = gfx }
+
+      local instance = TrainerCard.new(game, newOpts)
+      if instance.card then
+        instance.card.palette = nil 
+        instance.card.paletteFor = nil
+      end
+      return instance
+    end,
   })
   
   local CRYSTAL_FISH_SIDE = mod.assets:path("assets/overworld/crystalFishSide.png")
