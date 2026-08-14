@@ -1,7 +1,7 @@
 {
   "id": "crystal",
   "name": "Crystal",
-  "version": "0.7.6",
+  "version": "0.7.7",
   "api": 2,
   "entry": "main.lua",
   "profile": "content",
