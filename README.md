@@ -24,7 +24,8 @@
     * meta.json
   * As long as you have either back.png or backColor.png the other is option. The mod is designed to fallback if a sprite is missing.
 * Your meta.json needs to have a single key defined. This is the name that will appear in the options menu.
-__Example meta.json file__
+
+### Example meta.json file
 ```
 {
   "label": "ARALE"
