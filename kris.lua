@@ -4,35 +4,90 @@ function kris.init(mod)
 
 
   local PaletteFX = require("src.render.PaletteFX")
+  local Json = require("src.link.Json")
   local originalSpriteObp = PaletteFX.spriteObp
   local advancedPack = assert(PaletteFX.gbcPack())
-  
+
+  -- Sprite variant discovery
+  -- ----------------------------------
+  local SPRITES_DIR = "assets/sprites"
+
+  local function readMeta(key)
+    local metaPath = SPRITES_DIR .. "/" .. key .. "/meta.json"
+    if mod.assets:info(metaPath) then
+      local ok, decoded = pcall(Json.decode, mod:read(metaPath))
+      if ok and type(decoded) == "table" then return decoded end
+    end
+    return {}
+  end
+
+  local function fileVariant(key, name, trueColor)
+    local rel = SPRITES_DIR .. "/" .. key .. "/" .. name
+    if mod.assets:info(rel) then
+      return { path = rel, trueColor = trueColor }
+    end
+    return nil
+  end
+
+  local function byLabel(a, b)
+    return a.label < b.label
+  end
+
+  local function toChoicePairs(list)
+    local out = {}
+    for _, entry in ipairs(list) do
+      table.insert(out, { entry.label, entry.key })
+    end
+    return out
+  end
+
+  local function defaultKey(list, preferred)
+    for _, entry in ipairs(list) do
+      if entry.key == preferred then return preferred end
+    end
+    return list[1] and list[1].key or preferred
+  end
+
+  local battleSpriteVariants = {}
+  local frontSpriteVariants = {}
+  local battleChoices = {}
+  local frontChoices = {}
+
+  for _, key in ipairs(mod.assets:list(SPRITES_DIR)) do
+    local info = mod.assets:info(SPRITES_DIR .. "/" .. key)
+    if info and info.type == "directory" then
+      local meta = readMeta(key)
+      local label = meta.label or key:upper()
+
+      local back = fileVariant(key, "back.png", false)
+      local backColor = fileVariant(key, "backColor.png", true)
+      local front = fileVariant(key, "front.png", false)
+      local frontColor = fileVariant(key, "frontColor.png", true)
+
+      if back or backColor then
+        battleSpriteVariants[key] = { dmg = back or backColor, fullColor = backColor or back }
+        table.insert(battleChoices, { label = label, key = key })
+      end
+      if front or frontColor then
+        frontSpriteVariants[key] = { dmg = front or frontColor, fullColor = frontColor or front }
+        table.insert(frontChoices, { label = label, key = key })
+      end
+    end
+  end
+
+  table.sort(battleChoices, byLabel)
+  table.sort(frontChoices, byLabel)
 
   -- Define mod options
   -- ----------------------------------
-  mod.options:define({	  
+  mod.options:define({
     {
       key = "battleSprite", type = "choice", label = "BATTLE SPRITE",
-        choices = {
-          {"ORIGINAL", "original"},
-	  {"DARIO", "dario"},
-	  {"ARALE", "arale"},
-	  {"SYGNA", "sygna"},
-	  {"SYGNA ZOOM", "sygnaZoom"},
-	  {"ROCKET A", "rocketA"},
-	  {"ROCKET A ZOOM", "rocketAZoom"},
-	  {"ROCKET B", "rocketB"},
-	  {"ROCKET B ZOOM", "rocketBZoom"},
-	  {"HG/SS", "hgss"},
-      }, default = "original"
+      choices = toChoicePairs(battleChoices), default = defaultKey(battleChoices, "original")
     },
     {
       key = "frontSprite", type = "choice", label = "[G-1]TRAINER CARD",
-        choices = {
-          {"ORIGINAL", "original"},
-          {"ROCKET A", "rocketA"},
-          {"ROCKET B", "rocketB"},
-        }, default = "original"
+      choices = toChoicePairs(frontChoices), default = defaultKey(frontChoices, "original")
     },
     {
       key = "colorMode", type = "choice", label = "COLOR PALETTE",
@@ -41,64 +96,6 @@ function kris.init(mod)
          {"FULL COLOR", "fullColor"}},
          default = "dmg"}
   })
-
-  local battleSpriteVariants = {
-    dario = {
-      dmg = { path = "assets/back/stadiumBack.png", trueColor = false},
-      fullColor = { path = "assets/back/stadiumBackColor.png", trueColor = true},
-    },
-    arale = {
-      dmg = {path = "assets/back/stadiumBack.png", trueColor =false},
-      fullColor = {path = "assets/back/stadiumBackAlt.png", trueColor = true},
-    },
-    original = {
-      dmg = {path = "assets/back/originalBack.png", trueColor = false},
-      fullColor = {path = "assets/back/originalBackColor.png", trueColor = true},
-    },
-    sygna = {
-      dmg = {path = "assets/back/sygnaBack.png", trueColor = false},
-      fullColor = {path = "assets/back/sygnaBackColor.png", trueColor = true},
-    },
-    sygnaZoom = {
-      dmg = {path = "assets/back/sygnaZoom.png", trueColor = false},
-      fullColor = {path = "assets/back/sygnaZoomColor.png", trueColor = true},
-    },
-    rocketA = {
-      dmg = {path = "assets/back/rocketBackA.png", trueColor = false},
-      fullColor = {path = "assets/back/rocketBackColorA.png", trueColor = true},
-    },
-    rocketAZoom = {
-      dmg = {path = "assets/back/rocketZoomA.png", trueColor = false},
-      fullColor = {path = "assets/back/rocketZoomColorA.png", trueColor = true},
-    },
-    rocketB = {
-      dmg = {path = "assets/back/rocketBackB.png", trueColor = false},
-      fullColor = {path = "assets/back/rocketBackColorB.png", trueColor = true},
-    },
-    rocketBZoom = {
-      dmg = {path = "assets/back/rocketZoomB.png", trueColor = false},
-      fullColor = {path = "assets/back/rocketZoomColorB.png", trueColor = true},
-    },
-    hgss = {
-      dmg = {path = "assets/back/hgssBack.png", trueColor = false},
-      fullColor = {path = "assets/back/hgssBackColor.png", trueColor = true},
-    },
-  }
-
-  local frontSpriteVariants = {
-    original = {
-      dmg = {path = "assets/front/originalFront.png", trueColor = false},
-      fullColor = {path = "assets/front/originalFrontColor.png", trueColor = true},
-    },
-    rocketA = {
-      dmg = {path = "assets/front/rocketFrontA.png", trueColor = false},
-      fullColor = {path = "assets/front/rocketFrontColorA.png", trueColor = true},
-    },
-    rocketB = {
-      dmg = {path = "assets/front/rocketFrontB.png", trueColor = false},
-      fullColor = {path = "assets/front/rocketFrontColorB.png", trueColor = true},
-    },
-  }
 
   -- Assign player sprite based on mod options
   -- -----------------------------------------
@@ -180,7 +177,7 @@ function kris.init(mod)
   })
   
   mod.content.field:patch("playerPics", {
-    front = mod.assets:path("assets/front/originalFront.png")
+    front = mod.assets:path(SPRITES_DIR .. "/original/front.png")
   })
 
   -- Gen 2 Trainer Card
@@ -245,7 +242,7 @@ function kris.init(mod)
   local titleVariant = frontSpriteVariants[mod.options:get("frontSprite")]
     and frontSpriteVariants[mod.options:get("frontSprite")]["dmg"]
   local titlePlayer = titleVariant and mod.assets:path(titleVariant.path)
-    or mod.assets:path("assets/front/originalFront.png")
+    or mod.assets:path(SPRITES_DIR .. "/original/front.png")
   mod.content.field:patch("boot", {
     title = {player = titlePlayer},
   })

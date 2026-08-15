@@ -11,6 +11,26 @@
   * The fishing sprite breaks with voxel. It looks like this happens on the original sprite too.
 * Changed name options in Oak's dialogue to match Crystal's original options
 * All sprites have an SGB compatibility mode as well as a full color mode
+* Bring your own Front and Back Sprites!
+
+## How to add your own sprites!
+* Sprites can be placed in their own folder at assets/sprites/FOLDER_NAME_HERE
+  * Your folder must not have any spaces in the name. This is what the mod uses for the option key.
+  * In you folder place the following.
+    * back.png
+    * backColor.png
+    * front.png
+    * frontColor.png
+    * meta.json
+  * As long as you have either back.png or backColor.png the other is option. The mod is designed to fallback if a sprite is missing.
+* Your meta.json needs to have a single key defined. This is the name that will appear in the options menu.
+__Example meta.json file__
+```
+{
+  "label": "ARALE"
+}
+```
+
 
 ## What works in Gold
 *  Full color overworld sprite

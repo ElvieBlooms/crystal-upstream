@@ -1,11 +1,11 @@
 {
   "id": "crystal",
   "name": "Crystal",
-  "version": "0.7.7",
+  "version": "0.8",
   "api": 2,
   "entry": "main.lua",
   "profile": "content",
-  "game_version": ">=0.0.0-dev <1.0.0",
+  "game_version": ">=0.1.89",
   "category": "GRAPHICS",
   "priority": 100,
   "dependencies": [],
@@ -14,7 +14,8 @@
   "incompatible": [],
   "experimental": false,
   "permissions": [
-    "engine_internals"
+    "engine_internals",
+    "network"
   ],
   "description": "A simple sprite replacement for trainer Red to look like Crystal from pokemon Crystal Version",
   "github": "dburton95/crystal",
