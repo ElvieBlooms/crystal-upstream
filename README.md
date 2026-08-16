@@ -33,16 +33,3 @@
 ```
 
 
-## What works in Gold
-*  Full color overworld sprite
-*  Full color bike sprite (untested but should work)
-*  Credits
-*  Battle Sprite Choices
-*  Full color sprites in the battle engine
-*  Girl Mode re-gendering of the text
-
-## What doesn't work in Gold
-*  Overworld sprite doesn't support DMG palletes yet (You can use the DMG palette. the sprite will just be the only thing in full color)
-*  Player name options still show Golds defaults (for now)
-
-
