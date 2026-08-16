@@ -86,7 +86,7 @@ function kris.init(mod)
       choices = toChoicePairs(battleChoices), default = defaultKey(battleChoices, "original")
     },
     {
-      key = "frontSprite", type = "choice", label = "[G-1]TRAINER CARD",
+      key = "frontSprite", type = "choice", label = "FRONT SPRITE",
       choices = toChoicePairs(frontChoices), default = defaultKey(frontChoices, "original")
     },
     {
@@ -159,6 +159,20 @@ function kris.init(mod)
       return originalSpriteObp(spriteDef, seed)
       end
   end
+
+  -- Same rendering interception but for Gen 2
+  -- -----------------------------------------
+  mod.events:on("game.ready", function(ev)
+    local palettes = require("src.world.gen2.Palettes")
+    local originalSpritePalette = palettes.spritePalette
+
+    palettes.spritePalette = function(data, daytime, spriteDef, objDef)
+      if spriteDef and spriteDef.paletteSource == "PLAYER_PALETTE" then
+        return CRYSTAL_COLORS
+      end
+      return originalSpritePalette(data, daytime, spriteDef, objDef)
+    end
+  end)
   
     
   -- Sprite replacements
@@ -178,6 +192,32 @@ function kris.init(mod)
   
   mod.content.field:patch("playerPics", {
     front = mod.assets:path(SPRITES_DIR .. "/original/front.png")
+  })
+
+
+  local CRYSTAL_FISH_SIDE = mod.assets:path("assets/overworld/crystalFishSide.png")
+  local CRYSTAL_FISH_FRONT = mod.assets:path("assets/overworld/crystalFishFront.png")
+  local CRYSTAL_FISH_BACK = mod.assets:path("assets/overworld/crystalFishBack.png")
+
+  mod.content.field:patch("overworldFx", {
+    redFishSide  = { path = CRYSTAL_FISH_SIDE },
+    redFishFront = { path = CRYSTAL_FISH_FRONT },
+    redFishBack  = { path = CRYSTAL_FISH_BACK },
+  })
+
+  -- Sprite replacements
+  -- GOLD
+  -- -------------------------
+  mod.content.sprites:patch("SPRITE_CHRIS", {
+    image = mod.assets:path("assets/overworld/crystalPlayer.png"),
+    trueColor = false,
+    paletteSource = "PLAYER_PALETTE",
+  }) 
+
+  mod.content.sprites:patch("SPRITE_CHRIS_BIKE", {
+    image = mod.assets:path("assets/overworld/crystalBike.png"),
+    trueColor = false,
+    paletteSource = "PLAYER_PALETTE",
   })
 
   -- Gen 2 Trainer Card
@@ -205,30 +245,7 @@ function kris.init(mod)
       return instance
     end,
   })
-  
-  local CRYSTAL_FISH_SIDE = mod.assets:path("assets/overworld/crystalFishSide.png")
-  local CRYSTAL_FISH_FRONT = mod.assets:path("assets/overworld/crystalFishFront.png")
-  local CRYSTAL_FISH_BACK = mod.assets:path("assets/overworld/crystalFishBack.png")
-
-  mod.content.field:patch("overworldFx", {
-  redFishSide  = { path = CRYSTAL_FISH_SIDE },
-  redFishFront = { path = CRYSTAL_FISH_FRONT },
-  redFishBack  = { path = CRYSTAL_FISH_BACK },
-})
-
-  -- Sprite replacements
-  -- GOLD
-  -- -------------------------
-  mod.content.sprites:patch("SPRITE_CHRIS", {
-    image = mod.assets:path("assets/overworld/crystalPlayerColor.png"),
-    trueColor = true,
-  }) 
-
-  mod.content.sprites:patch("SPRITE_CHRIS_BIKE", {
-    image = mod.assets:path("assets/overworld/crystalBikeColor.png"),
-    trueColor = true,
-  })
-  
+   
   -- New game naming options
   -- ---------------------------
   mod.content.field:override("boot", {
@@ -236,6 +253,23 @@ function kris.init(mod)
       player = {"KRIS", "AMANDA", "JUANA", "JODI" }
     }
   })
+  
+  -- Gen 2 Naming options and forcing true color of player sprite.
+  -- This can likely be reduced when the field registry is
+  -- hooked into gen 2 via the mod api.
+  -- --------------------------------------------------
+  mod.events:on("game.ready", function(ev)
+    local game = ev.game
+    local palettes = game.data.gen2Palettes
+    game.data.field = game.data.field or {}
+    game.data.field.boot = game.data.field.boot or {}
+    game.data.field.boot.namePresets = {
+      player = {"KRIS", "AMANDA", "JUANA", "JODI"}
+    }
+    if palettes and palettes.trainers then
+      palettes.trainers.CAL = nil
+    end
+  end)
 
   -- Title screen player
   -- ----------------------
@@ -243,10 +277,13 @@ function kris.init(mod)
     and frontSpriteVariants[mod.options:get("frontSprite")]["dmg"]
   local titlePlayer = titleVariant and mod.assets:path(titleVariant.path)
     or mod.assets:path(SPRITES_DIR .. "/original/front.png")
+  local krisEdition = mod.assets:path("assets/menus/krisEdition.png")
   mod.content.field:patch("boot", {
-    title = {player = titlePlayer},
+    title = {
+      player = titlePlayer,
+      versionRibbon = krisEdition,
+    },
   })
-
 
 end
 
