@@ -1,6 +1,6 @@
 local kris = {}
 
-function kris.init(mod)
+function kris.init(mod, cfg)
 
 
   local PaletteFX = require("src.render.PaletteFX")
@@ -250,7 +250,7 @@ function kris.init(mod)
   -- ---------------------------
   mod.content.field:override("boot", {
     namePresets = {
-      player = {"KRIS", "AMANDA", "JUANA", "JODI" }
+      player = cfg.nameChoices
     }
   })
   
@@ -264,7 +264,7 @@ function kris.init(mod)
     game.data.field = game.data.field or {}
     game.data.field.boot = game.data.field.boot or {}
     game.data.field.boot.namePresets = {
-      player = {"KRIS", "AMANDA", "JUANA", "JODI"}
+      player = cfg.nameChoices
     }
     if palettes and palettes.trainers then
       palettes.trainers.CAL = nil

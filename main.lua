@@ -1,10 +1,20 @@
 return function(mod)
+  local config = require("mods.crystal.config")
   local kris = require("mods.crystal.kris")
   local girlMode = require("mods.crystal.girlMode")
+  local nbMode = require("mods.crystal.nbMode")
   local credits = require("mods.crystal.credits")
 
-  kris.init(mod)
-  girlMode.init(mod)
-  credits.init(mod)
+  local cfg = config.load(mod)
 
+  kris.init(mod, cfg)
+
+  if cfg.genderMode == "girl" then
+    girlMode.init(mod)
+  elseif cfg.genderMode == "enby" then
+    nbMode.init(mod)
+  end
+  -- "boy": neither runs, vanilla male text stands untouched
+
+  credits.init(mod)
 end

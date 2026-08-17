@@ -32,4 +32,24 @@
 }
 ```
 
+### Naming & gender options
+Any sprite folder's `meta.json` (the same one that defines `label`) also accepts two optional keys:
+* `nameChoices` — array of strings shown as name choices at the start of a new game (Gen 1 and Gold).
+* `genderMode` — one of `"boy"` (vanilla male text), `"girl"` (Crystal's re-gendered text), or `"enby"` (gender-neutral text).
+
+add them to your own sprite's `meta.json` alongside its `label`. If more than one sprite folder defines the same key, the last one wins in alphabetical order by folder name, so it's simplest to only set them in one place.
+
+
+## What works in Gold
+*  Full color overworld sprite
+*  Full color bike sprite (untested but should work)
+*  Credits
+*  Battle Sprite Choices
+*  Full color sprites in the battle engine
+*  Girl Mode re-gendering of the text
+
+## What doesn't work in Gold
+*  Overworld sprite doesn't support DMG palletes yet (You can use the DMG palette. the sprite will just be the only thing in full color)
+*  Player name options still show Golds defaults (for now)
+
 
