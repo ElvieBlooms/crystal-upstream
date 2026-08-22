@@ -167,7 +167,7 @@ function kris.init(mod)
   -- SPRITE, falling back to Crystal's defaults when a folder doesn't
   -- define them. -Elvie
   -- --------------------------------------------------
-  local DEFAULT_NAME_CHOICES = {"KRIS", "AMANDA", "JUANA", "JODI"}
+  local DEFAULT_NAME_CHOICES = {"JESSIE", "JAMES", "ROCKET", "GIOVANNI"}
   local DEFAULT_GENDER_MODE = "girl"
   local VALID_GENDER_MODES = { boy = true, girl = true, enby = true }
 
