@@ -19,5 +19,5 @@
   ],
   "description": "A simple sprite replacement for trainer Red to look like Crystal from pokemon Crystal Version",
   "github": "dburton95/crystal",
-  "games": ["gen1", "gold"]
+  "games": ["gen1", "gold", "silver"]
 }
