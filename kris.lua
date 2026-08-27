@@ -2,6 +2,8 @@ local kris = {}
 
 function kris.init(mod)
 
+  local GameVersion = require("src.core.GameVersion")
+  local isGen2 = GameVersion.generation(GameVersion.get()) == 2
 
   local PaletteFX = require("src.render.PaletteFX")
   local Json = require("src.link.Json")
@@ -219,19 +221,28 @@ function kris.init(mod)
       end
   end
 
-  -- Same rendering interception but for Gen 2
+  -- Same rendering interception but for Gen 2. Gated on isGen2 because the
+  -- engine unconditionally refuses to require any src.*.gen2.* module while
+  -- a Gen 1 game is active (Loader.lua's crossGenerationDenial) -- this
+  -- manifest also loads on plain Gen 1, and the previous unconditional
+  -- require here crashed mod load on a Red/Blue/Yellow boot. Palettes has
+  -- no game-instance dependency, so -- like PaletteFX above -- it's patched
+  -- once here rather than deferred to game.ready; patching it inside
+  -- game.ready instead re-wraps it every time that event fires, which can
+  -- happen more than once per session under dev hot-reload
+  -- (POKEPORT_DEV=1, F5), building up a growing chain of wrappers each
+  -- time. -Elvie
   -- -----------------------------------------
-  mod.events:on("game.ready", function(ev)
-    local palettes = require("src.world.gen2.Palettes")
-    local originalSpritePalette = palettes.spritePalette
-
-    palettes.spritePalette = function(data, daytime, spriteDef, objDef)
+  if isGen2 then
+    local Palettes = require("src.world.gen2.Palettes")
+    local originalSpritePalette = Palettes.spritePalette
+    Palettes.spritePalette = function(data, daytime, spriteDef, objDef)
       if spriteDef and spriteDef.paletteSource == "PLAYER_PALETTE" then
         return CRYSTAL_COLORS
       end
       return originalSpritePalette(data, daytime, spriteDef, objDef)
     end
-  end)
+  end
   
     
   -- Sprite replacements
@@ -251,16 +262,20 @@ function kris.init(mod)
     paletteSource = "PLAYER_PALETTE"
   })
   
-  mod.content.field:patch("playerPics", {
-    front = mod.assets:path(SPRITES_DIR .. "/original/front.png")
-  })
+  -- Gated on isGen2 (see the Palettes comment above): the field registry
+  -- has no Gen 2 target, so these two patches never applied there anyway --
+  -- this just makes that boundary explicit instead of a silent no-op. -Elvie
+  if not isGen2 then
+    mod.content.field:patch("playerPics", {
+      front = mod.assets:path(SPRITES_DIR .. "/original/front.png")
+    })
 
-
-  mod.content.field:patch("overworldFx", {
-    redFishSide  = { path = overworldFishSide },
-    redFishFront = { path = overworldFishFront },
-    redFishBack  = { path = overworldFishBack },
-  })
+    mod.content.field:patch("overworldFx", {
+      redFishSide  = { path = overworldFishSide },
+      redFishFront = { path = overworldFishFront },
+      redFishBack  = { path = overworldFishBack },
+    })
+  end
 
   -- Sprite replacements
   -- GOLD
@@ -305,13 +320,17 @@ function kris.init(mod)
   })
    
   -- New game naming options
-  -- Pulled from nameChoices above instead of a fixed list. -Elvie
+  -- Pulled from nameChoices above instead of a fixed list. Gated on isGen2
+  -- for the same reason as playerPics/overworldFx above -- Gen 2's own
+  -- naming presets are handled separately below via game.ready. -Elvie
   -- ---------------------------
-  mod.content.field:override("boot", {
-    namePresets = {
-      player = nameChoices
-    }
-  })
+  if not isGen2 then
+    mod.content.field:override("boot", {
+      namePresets = {
+        player = nameChoices
+      }
+    })
+  end
   
   -- Gen 2 Naming options and forcing true color of player sprite.
   -- This can likely be reduced when the field registry is
@@ -331,19 +350,37 @@ function kris.init(mod)
     end
   end)
 
-  -- Title screen player
+  -- Crystal has a native gender-choice screen (Oak's Speech gets a
+  -- "gender_select" step inserted whenever the sprite cache carries Kris
+  -- data -- Gold/Silver never have that data, so they never get the step).
+  -- Appearance here is meant to come entirely from the selected sprite
+  -- folder, not a second, separate native choice, so this strips that step
+  -- out unconditionally. It's a harmless no-op on Gen 1 and Gold/Silver,
+  -- where the step never existed to begin with. With no choice made,
+  -- gender defaults to "male" (Save.lua's own fallback), so SPRITE_CHRIS --
+  -- already patched above -- is what actually displays either way. -Elvie
+  -- --------------------------------------------------
+  mod.hooks:wrap("intro.oak_speech.build", function(next, steps, speech)
+    steps = next(steps, speech)
+    return mod.ui.removeStep(steps, "gender_select")
+  end)
+
+  -- Title screen player. Gated on isGen2 for the same reason as the other
+  -- field patches above. -Elvie
   -- ----------------------
-  local titleVariant = frontSpriteVariants[mod.options:get("frontSprite")]
-    and frontSpriteVariants[mod.options:get("frontSprite")]["dmg"]
-  local titlePlayer = titleVariant and mod.assets:path(titleVariant.path)
-    or mod.assets:path(SPRITES_DIR .. "/original/front.png")
-  local krisEdition = mod.assets:path("assets/menus/krisEdition.png")
-  mod.content.field:patch("boot", {
-    title = {
-      player = titlePlayer,
-      versionRibbon = krisEdition,
-    },
-  })
+  if not isGen2 then
+    local titleVariant = frontSpriteVariants[mod.options:get("frontSprite")]
+      and frontSpriteVariants[mod.options:get("frontSprite")]["dmg"]
+    local titlePlayer = titleVariant and mod.assets:path(titleVariant.path)
+      or mod.assets:path(SPRITES_DIR .. "/original/front.png")
+    local krisEdition = mod.assets:path("assets/menus/krisEdition.png")
+    mod.content.field:patch("boot", {
+      title = {
+        player = titlePlayer,
+        versionRibbon = krisEdition,
+      },
+    })
+  end
 
   -- Hands the resolved config back to main.lua so it can choose
   -- girlMode, nbMode, or neither. -Elvie

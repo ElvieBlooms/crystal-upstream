@@ -69,4 +69,7 @@ All of the above — the five overworld files and the three meta.json keys — a
 *  Overworld sprite doesn't support DMG palletes yet (You can use the DMG palette. the sprite will just be the only thing in full color)
 *  Player name options still show Golds defaults (for now)
 
+## Crystal
+Crystal is now a supported game version alongside Gold and Silver. Crystal has its own native gender-choice screen (choosing between Chris and Kris) that Gold and Silver never had; since this mod's sprite already comes from your selected sprite folder, that screen is skipped automatically so it doesn't ask a second, separate question. Everything documented above for Gold applies to Crystal as well.
+
 
