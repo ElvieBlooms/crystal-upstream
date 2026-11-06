@@ -24,6 +24,16 @@ end
 function lens.init(mod, api)
   if type(api) ~= "table" then return end
   local Font = mod.ui and mod.ui.Font
+  -- A translation's TTF prints in the current colour (Game Boy tiles are
+  -- black whatever it is), so text is always drawn in black, as the game's
+  -- own screens do -Elvie
+  local function text(s, x, y)
+    local r, g, b, a = love.graphics.getColor()
+    love.graphics.setColor(0, 0, 0, 1)
+    local w = Font.draw(s, x, y)
+    love.graphics.setColor(r, g, b, a)
+    return w
+  end
   if not (Font and mod.content and mod.content.screens) then return end
   local okFx, PaletteFX = pcall(require, "src.render.PaletteFX")
   if not okFx then PaletteFX = nil end
@@ -85,7 +95,7 @@ function lens.init(mod, api)
         Font.drawBox(0, 0, 20, 18)
         for i = 0, PAGE - 1 do
           local line = lines[self.top + i]
-          if line then Font.draw(cut(line, 18), 8, 8 + i * 8) end
+          if line then text(cut(line, 18), 8, 8 + i * 8) end
         end
       end
       return self
@@ -119,21 +129,21 @@ function lens.init(mod, api)
       function self:draw()
         local rows = api.rows()
         Font.drawBox(0, 0, 20, 18)
-        Font.draw("CRYSTAL LENS", 8, 8)
+        text("CRYSTAL LENS", 8, 8)
         for i, row in ipairs(rows) do
           local y = ROW_Y + (i - 1) * ROW_H
           if i == self.cursor then
             -- the engine's own cursor glyph, as its menus draw it -Elvie
             local Theme = mod.ui.Theme
             if Theme and Theme.cursor and Font.drawCode then Font.drawCode(Theme.cursor, (LABEL_X - 1) * 8, y)
-            else Font.draw(">", (LABEL_X - 1) * 8, y) end
+            else text(">", (LABEL_X - 1) * 8, y) end
           end
-          Font.draw(row.label, LABEL_X * 8, y)
+          text(row.label, LABEL_X * 8, y)
           local label = row.valueLabel
           if not label then
             for _, choice in ipairs(row.choices or {}) do if choice[2] == row.value then label = choice[1] end end
           end
-          Font.draw(cut(label, VALUE_CHARS), VALUE_X * 8, y)
+          text(cut(label, VALUE_CHARS), VALUE_X * 8, y)
         end
         local row = rows[self.cursor] or {}
         local preview = api.preview(row.who or "player")
@@ -169,7 +179,7 @@ function lens.init(mod, api)
             love.graphics.draw(walk, quad, WALK_X, WALK_Y)
           end
         else
-          Font.draw("OFF", WALK_X, WALK_Y)
+          text("OFF", WALK_X, WALK_Y)
         end
       end
       return self
